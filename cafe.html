@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Rincón — Café & Desayunos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #F5EDD8;
+    --warm-white: #FAF6EE;
+    --beige: #E8D9BF;
+    --sand: #D4BC95;
+    --brown-light: #C4A47C;
+    --brown: #8B6340;
+    --brown-dark: #5C3D1E;
+    --espresso: #2C1A0E;
+    --text-main: #2C1A0E;
+    --text-muted: #7A5C3A;
+    --text-light: #A68660;
+    --accent: #B5763A;
+    --accent-hover: #9A5F28;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--text-main);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(250,246,238,0.95);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 0 rgba(139,99,64,0.12);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--warm-white);
+    letter-spacing: 0.02em;
+    transition: color 0.4s;
+    text-decoration: none;
+  }
+  nav.scrolled .nav-logo { color: var(--espresso); }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(250,246,238,0.85);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  nav.scrolled .nav-links a { color: var(--text-muted); }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--warm-white) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 2rem;
+    transition: background 0.3s !important;
+  }
+  .nav-cta:hover { background: var(--accent-hover) !important; color: var(--warm-white) !important; }
+  nav.scrolled .nav-cta { color: var(--warm-white) !important; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #2C1A0E 0%, #5C3D1E 50%, #3D2010 100%);
+    transform: scale(1.05);
+    transition: transform 0.1s linear;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(44,26,14,0.65) 0%, rgba(92,61,30,0.45) 60%, rgba(44,26,14,0.3) 100%);
+  }
+  .hero-content {
+    position: relative;
+    text-align: center;
+    color: var(--warm-white);
+    max-width: 680px;
+    padding: 0 2rem;
+  }
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 1.25rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.55s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--brown-light); }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(245,237,216,0.85);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.75s forwards;
+  }
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.95s forwards;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--warm-white);
+    padding: 0.85rem 2.2rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+  .btn-outline {
+    border: 1.5px solid rgba(245,237,216,0.5);
+    color: var(--warm-white);
+    padding: 0.85rem 2.2rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: border-color 0.3s, background 0.3s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { background: rgba(245,237,216,0.1); border-color: rgba(245,237,216,0.8); transform: translateY(-2px); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(245,237,216,0.6);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 0.8s 1.4s forwards;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: rgba(245,237,216,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(245,237,216,0.9);
+    animation: scrollLine 1.8s 1.6s infinite;
+  }
+
+  /* STRIP */
+  .strip {
+    background: var(--espresso);
+    color: var(--sand);
+    padding: 1.1rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .strip-item { display: flex; align-items: center; gap: 0.6rem; }
+  .strip-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  /* SECTIONS */
+  section { padding: 5rem 3rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+  }
+  .about-img-css {
+    width: 100%;
+    aspect-ratio: 4/5;
+    border-radius: 4px;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-img-accent-css {
+    position: absolute;
+    bottom: -1.5rem;
+    right: -1.5rem;
+    width: 55%;
+    aspect-ratio: 1;
+    border-radius: 4px;
+    border: 6px solid var(--warm-white);
+    overflow: hidden;
+  }
+  .menu-img-css {
+    width: 100%;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-img { display: none; }
+  .about-img-accent { display: none; }
+  .menu-img-main:not(.menu-img-css) { display: none; }
+  /* Hero overlay extra grain for depth */
+  .hero-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='1' height='1' fill='%23ffffff08'/%3E%3C/svg%3E");
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.2;
+    color: var(--espresso);
+    margin-bottom: 1.25rem;
+  }
+  h2 em { font-style: italic; }
+  .body-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  /* FEATURES */
+  .features { background: var(--cream); }
+  .features-header { text-align: center; max-width: 560px; margin: 0 auto 4rem; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .feature-card {
+    background: var(--warm-white);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .feature-card:hover::before { transform: scaleX(1); }
+  .feature-icon {
+    width: 52px; height: 52px;
+    background: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+  }
+  .feature-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--espresso);
+    margin-bottom: 0.75rem;
+  }
+  .feature-card p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text-muted);
+  }
+
+  /* MENU PREVIEW */
+  .menu-section { background: var(--espresso); color: var(--cream); overflow: hidden; }
+  .menu-section .container { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: center; }
+  .menu-section h2 { color: var(--cream); }
+  .menu-section .tag { color: var(--brown-light); }
+  .menu-section .body-text { color: rgba(232,217,191,0.75); }
+  .menu-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .menu-tab {
+    padding: 0.4rem 1.1rem;
+    border-radius: 2rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: 1px solid rgba(196,164,124,0.3);
+    color: var(--sand);
+    background: transparent;
+    transition: all 0.3s;
+  }
+  .menu-tab.active, .menu-tab:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--warm-white);
+  }
+  .menu-items { display: flex; flex-direction: column; gap: 0; }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid rgba(196,164,124,0.15);
+    gap: 1rem;
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+  .menu-item-desc { font-size: 0.8rem; color: rgba(196,164,124,0.7); }
+  .menu-item-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--brown-light);
+    white-space: nowrap;
+  }
+  .menu-img-stack { position: relative; }
+  .menu-img-main {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+  .menu-img-badge {
+    position: absolute;
+    bottom: 1.5rem;
+    left: -2rem;
+    background: var(--accent);
+    color: var(--warm-white);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .menu-img-badge .big { font-family: 'Playfair Display', serif; font-size: 2rem; display: block; line-height: 1; }
+  .menu-img-badge .small { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--beige); }
+  .testimonials .container { text-align: center; }
+  .testimonials h2 { margin-bottom: 3rem; }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    text-align: left;
+  }
+  .testi-card {
+    background: var(--warm-white);
+    border-radius: 4px;
+    padding: 2rem;
+  }
+  .stars { color: var(--accent); font-size: 0.85rem; margin-bottom: 1rem; letter-spacing: 0.1em; }
+  .testi-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--espresso);
+    margin-bottom: 1.25rem;
+  }
+  .testi-author { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.05em; }
+
+  /* VISIT */
+  .visit { background: var(--warm-white); }
+  .visit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .visit-info h2 { margin-bottom: 1.5rem; }
+  .info-block { margin-bottom: 2rem; }
+  .info-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+  .info-value { font-size: 0.95rem; line-height: 1.6; color: var(--text-muted); }
+  .map-placeholder {
+    background: var(--cream);
+    border-radius: 4px;
+    aspect-ratio: 4/3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    overflow: hidden;
+    position: relative;
+  }
+  .map-pin { font-size: 2.5rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--espresso);
+    color: var(--sand);
+    padding: 3rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+  .footer-tagline { font-size: 0.82rem; color: var(--text-light); margin-bottom: 2rem; letter-spacing: 0.05em; }
+  .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .footer-links a { font-size: 0.8rem; color: var(--sand); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--brown-light); }
+  .footer-copy { font-size: 0.75rem; color: rgba(180,152,110,0.5); }
+  .footer-divider { width: 40px; height: 1px; background: rgba(180,152,110,0.3); margin: 2rem auto; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollLine {
+    0% { top: -100%; }
+    100% { top: 100%; }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid, .menu-section .container, .visit-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .about-img-accent { display: none; }
+    .features-grid, .testi-grid { grid-template-columns: 1fr; }
+    .strip { gap: 1.5rem; padding: 1rem 1.5rem; }
+    .menu-img-badge { left: 1rem; }
+    h2 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">El Rincón</a>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#menu">Menú</a></li>
+    <li><a href="#visita">Visítanos</a></li>
+    <li><a href="#menu" class="nav-cta">Ver menú</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Desde 1998 · Madrid</p>
+    <h1 class="hero-title">Empieza el día<br><em>como mereces</em></h1>
+    <p class="hero-subtitle">Café de especialidad, desayunos caseros y bocadillos artesanales. Un rincón para tomarse el tiempo que el día pide.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-primary">Ver menú</a>
+      <a href="#visita" class="btn-outline">Cómo llegar</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Descubrir</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item"><div class="strip-dot"></div><span>Abierto todos los días · 7:00 – 16:00</span></div>
+  <div class="strip-item"><div class="strip-dot"></div><span>Café de especialidad</span></div>
+  <div class="strip-item"><div class="strip-dot"></div><span>Sin esperas · Servicio rápido</span></div>
+  <div class="strip-item"><div class="strip-dot"></div><span>Madrid Centro</span></div>
+</div>
+
+<!-- ABOUT -->
+<section id="nosotros">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-wrap reveal">
+        <div class="about-img about-img-css">
+          <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position:absolute;inset:0;">
+            <defs>
+              <radialGradient id="cupGlow" cx="50%" cy="60%" r="50%">
+                <stop offset="0%" stop-color="#C4A47C" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#2C1A0E" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="300" height="400" fill="#3D2010"/>
+            <rect width="300" height="400" fill="url(#cupGlow)"/>
+            <!-- table surface -->
+            <ellipse cx="150" cy="310" rx="130" ry="30" fill="#5C3D1E" opacity="0.6"/>
+            <!-- saucer -->
+            <ellipse cx="150" cy="295" rx="80" ry="14" fill="#8B6340"/>
+            <ellipse cx="150" cy="292" rx="70" ry="10" fill="#A07848"/>
+            <!-- cup body -->
+            <path d="M110 220 Q108 290 130 292 L170 292 Q192 290 190 220 Z" fill="#F5EDD8"/>
+            <path d="M113 222 Q111 286 132 290 L168 290 Q189 286 187 222 Z" fill="#FAF6EE"/>
+            <!-- coffee inside -->
+            <ellipse cx="150" cy="222" rx="37" ry="9" fill="#3D2010"/>
+            <ellipse cx="150" cy="222" rx="30" ry="6" fill="#5C3D1E"/>
+            <!-- latte art -->
+            <path d="M138 220 Q150 214 162 220 Q155 225 150 222 Q145 225 138 220Z" fill="#C4A47C" opacity="0.6"/>
+            <!-- handle -->
+            <path d="M190 240 Q215 240 215 262 Q215 284 190 280" fill="none" stroke="#F5EDD8" stroke-width="8" stroke-linecap="round"/>
+            <!-- steam lines -->
+            <path d="M135 205 Q130 190 135 175 Q140 160 135 145" fill="none" stroke="#C4A47C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <path d="M150 200 Q145 183 150 166 Q155 149 150 132" fill="none" stroke="#C4A47C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <path d="M165 205 Q160 188 165 171 Q170 154 165 137" fill="none" stroke="#C4A47C" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <!-- beans scatter -->
+            <ellipse cx="80" cy="340" rx="12" ry="8" fill="#5C3D1E" transform="rotate(-20,80,340)"/>
+            <ellipse cx="220" cy="330" rx="10" ry="7" fill="#5C3D1E" transform="rotate(15,220,330)"/>
+            <ellipse cx="60" cy="280" rx="9" ry="6" fill="#4A2E14" transform="rotate(-35,60,280)"/>
+            <ellipse cx="240" cy="270" rx="8" ry="5" fill="#4A2E14" transform="rotate(25,240,270)"/>
+            <!-- centre line on beans -->
+            <line x1="72" y1="337" x2="88" y2="343" stroke="#3D2010" stroke-width="1" opacity="0.5"/>
+            <line x1="213" y1="327" x2="227" y2="333" stroke="#3D2010" stroke-width="1" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="about-img-accent about-img-accent-css">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position:absolute;inset:0;">
+            <rect width="200" height="200" fill="#F5EDD8"/>
+            <!-- croissant shape -->
+            <path d="M60 130 Q50 100 70 80 Q90 55 120 60 Q155 65 165 90 Q175 115 160 135 Q140 155 110 150 Q80 148 60 130Z" fill="#C4A47C"/>
+            <path d="M65 128 Q56 100 74 82 Q92 59 120 64 Q153 68 162 91 Q171 113 157 132 Q138 150 110 146 Q82 144 65 128Z" fill="#D4A96A"/>
+            <!-- layers -->
+            <path d="M75 120 Q70 100 83 86 Q96 70 115 73" fill="none" stroke="#B5763A" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+            <path d="M88 132 Q82 112 92 97 Q104 80 122 82" fill="none" stroke="#B5763A" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+            <!-- plate -->
+            <ellipse cx="112" cy="152" rx="65" ry="12" fill="#E8D9BF" opacity="0.8"/>
+            <ellipse cx="112" cy="150" rx="58" ry="9" fill="#F5EDD8"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <p class="tag reveal">Nuestra historia</p>
+        <h2 class="reveal reveal-delay-1">Un lugar donde el café<br><em>sabe a pausa</em></h2>
+        <p class="body-text reveal reveal-delay-2">Llevamos más de veinticinco años siendo el primer rincón del día para muchos madrileños. Aquí el café se prepara con mimo, los desayunos se hacen con producto de temporada y el tiempo va un poco más despacio.</p>
+        <p class="body-text reveal reveal-delay-3">No somos una cadena ni queremos serlo. Somos el sitio de siempre, con una carta que cambia poco porque lo bueno no hace falta tocarlo.</p>
+        <a href="#menu" class="btn-primary reveal reveal-delay-4">Ver la carta completa</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="features-header">
+      <p class="tag reveal">Por qué elegirnos</p>
+      <h2 class="reveal reveal-delay-1">Lo que nos hace<br><em>diferentes</em></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <h3>Rápidos de verdad</h3>
+        <p>El café llega a la mesa en menos de tres minutos. Sabemos que las mañanas tienen prisa, y nos adaptamos a tu ritmo sin sacrificar calidad.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon">☕</div>
+        <h3>Café de especialidad</h3>
+        <p>Trabajamos con tostadores seleccionados y preparamos cada taza con técnica y cariño. Espresso, cortado, americano, cappuccino — todos con granos de origen.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon">🥐</div>
+        <h3>Variedad para todos</h3>
+        <p>De la tostada con tomate al bocadillo de jamón ibérico, pasando por tostadas dulces, zumos naturales y bollería artesanal. Algo para cada mañana.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+  <div class="container">
+    <div>
+      <p class="tag reveal">La carta</p>
+      <h2 class="reveal reveal-delay-1">Sencillo, rico<br><em>y de siempre</em></h2>
+      <p class="body-text reveal reveal-delay-2">Una selección cuidada que no necesita complicarse. Producto fresco, preparación honesta y precios justos.</p>
+      <div class="menu-tabs reveal reveal-delay-3">
+        <button class="menu-tab active" onclick="showMenu('cafes', this)">Cafés</button>
+        <button class="menu-tab" onclick="showMenu('desayunos', this)">Desayunos</button>
+        <button class="menu-tab" onclick="showMenu('bocadillos', this)">Bocadillos</button>
+        <button class="menu-tab" onclick="showMenu('zumos', this)">Zumos</button>
+      </div>
+      <div id="menu-items" class="menu-items">
+        <!-- filled by JS -->
+      </div>
+    </div>
+    <div class="menu-img-stack reveal reveal-delay-2">
+      <div class="menu-img-main menu-img-css">
+        <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position:absolute;inset:0;">
+          <rect width="300" height="400" fill="#1A0E06"/>
+          <!-- table -->
+          <rect x="0" y="300" width="300" height="100" fill="#3D2010"/>
+          <!-- plate -->
+          <ellipse cx="150" cy="310" rx="110" ry="22" fill="#5C3D1E"/>
+          <ellipse cx="150" cy="307" rx="100" ry="18" fill="#E8D9BF"/>
+          <ellipse cx="150" cy="305" rx="88" ry="14" fill="#FAF6EE"/>
+          <!-- toast slice 1 -->
+          <rect x="95" y="248" width="55" height="58" rx="4" fill="#C4872A"/>
+          <rect x="98" y="251" width="49" height="52" rx="3" fill="#D9A040"/>
+          <!-- tomato on toast -->
+          <circle cx="122" cy="268" r="16" fill="#C44030"/>
+          <circle cx="122" cy="268" r="13" fill="#E05040"/>
+          <path d="M112 262 Q122 255 132 262" fill="none" stroke="#C44030" stroke-width="1.5"/>
+          <!-- toast slice 2 -->
+          <rect x="155" y="252" width="52" height="55" rx="4" fill="#B5763A"/>
+          <rect x="158" y="255" width="46" height="49" rx="3" fill="#C4872A"/>
+          <!-- olive oil drizzle -->
+          <path d="M160 268 Q170 264 178 270 Q185 275 178 280" fill="none" stroke="#D4A030" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+          <!-- coffee cup top right -->
+          <ellipse cx="248" cy="190" rx="32" ry="7" fill="#8B6340"/>
+          <ellipse cx="248" cy="188" rx="28" ry="5" fill="#5C3D1E"/>
+          <rect x="220" y="188" width="56" height="44" rx="6" fill="#F5EDD8"/>
+          <rect x="222" y="190" width="52" height="40" rx="5" fill="#FAF6EE"/>
+          <ellipse cx="248" cy="192" rx="24" ry="5" fill="#3D2010"/>
+          <path d="M276 202 Q292 202 292 215 Q292 228 276 226" fill="none" stroke="#F5EDD8" stroke-width="5" stroke-linecap="round"/>
+          <!-- steam -->
+          <path d="M238 183 Q235 172 238 161" fill="none" stroke="#C4A47C" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+          <path d="M248 180 Q245 168 248 156" fill="none" stroke="#C4A47C" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+          <path d="M258 183 Q255 171 258 159" fill="none" stroke="#C4A47C" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+          <!-- OJ glass left -->
+          <path d="M50 210 Q48 268 58 272 L88 272 Q98 268 96 210 Z" fill="#E8913A" opacity="0.9"/>
+          <path d="M52 212 Q50 265 59 270 L87 270 Q96 265 94 212 Z" fill="#F5A040"/>
+          <ellipse cx="73" cy="212" rx="22" ry="5" fill="#FAB850"/>
+          <!-- sugar packets -->
+          <rect x="40" y="295" width="24" height="10" rx="2" fill="#FAF6EE" transform="rotate(-10,40,295)"/>
+          <rect x="240" y="292" width="22" height="10" rx="2" fill="#FAF6EE" transform="rotate(8,240,292)"/>
+        </svg>
+      </div>
+      <div class="menu-img-badge">
+        <span class="big">25+</span>
+        <span class="small">años sirviendo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <p class="tag reveal">Lo que dicen</p>
+    <h2 class="reveal reveal-delay-1">Nuestros clientes,<br><em>nuestra razón</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="stars">★ ★ ★ ★ ★</div>
+        <p class="testi-text">"El mejor cortado del barrio, sin discusión. Llevo diez años viniendo y nunca me han fallado."</p>
+        <p class="testi-author">— Marta G., cliente habitual</p>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="stars">★ ★ ★ ★ ★</div>
+        <p class="testi-text">"El bocadillo de jamón con el café con leche es mi desayuno de los viernes. Un ritual que no cambiaría por nada."</p>
+        <p class="testi-author">— Javier L., vecino del barrio</p>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="stars">★ ★ ★ ★ ★</div>
+        <p class="testi-text">"Rápidos, amables y con un café que sabe a café de verdad. En Madrid eso ya no es tan fácil de encontrar."</p>
+        <p class="testi-author">— Ana P., trabajadora cercana</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section class="visit" id="visita">
+  <div class="container">
+    <div class="visit-grid">
+      <div class="visit-info">
+        <p class="tag reveal">Encuéntranos</p>
+        <h2 class="reveal reveal-delay-1">Ven a<br><em>vernos</em></h2>
+        <div class="info-block reveal reveal-delay-2">
+          <p class="info-label">Dirección</p>
+          <p class="info-value">Calle del Café, 12<br>28004 Madrid (Chueca)</p>
+        </div>
+        <div class="info-block reveal reveal-delay-2">
+          <p class="info-label">Horario</p>
+          <p class="info-value">Lunes a viernes · 7:00 – 16:00<br>Sábados y domingos · 8:00 – 15:00</p>
+        </div>
+        <div class="info-block reveal reveal-delay-3">
+          <p class="info-label">Contacto</p>
+          <p class="info-value">Tel. 91 234 56 78<br>info@elrincon.es</p>
+        </div>
+        <a href="https://maps.google.com" class="btn-primary reveal reveal-delay-4" target="_blank">Abrir en Google Maps</a>
+      </div>
+      <div class="map-placeholder reveal reveal-delay-2">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#C4A47C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+        <p style="font-size:0.85rem;color:var(--text-light);text-align:center;max-width:180px;line-height:1.5;">Calle del Café, 12<br>Chueca · Madrid</p>
+        <a href="https://maps.google.com" class="btn-primary" target="_blank" style="margin-top:0.5rem;font-size:0.82rem;padding:0.6rem 1.5rem;">Ver en el mapa</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">El Rincón</div>
+  <p class="footer-tagline">Café & Desayunos · Madrid desde 1998</p>
+  <div class="footer-links">
+    <a href="#nosotros">Nosotros</a>
+    <a href="#menu">Menú</a>
+    <a href="#visita">Visítanos</a>
+    <a href="mailto:info@elrincon.es">Contacto</a>
+  </div>
+  <div class="footer-divider"></div>
+  <p class="footer-copy">© 2025 El Rincón. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Hero parallax
+  const heroBg = document.getElementById('heroBg');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight) {
+      heroBg.style.transform = `scale(1.05) translateY(${window.scrollY * 0.3}px)`;
+    }
+  }, { passive: true });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Menu
+  const menus = {
+    cafes: [
+      { name: 'Espresso', desc: 'Origen Etiopía, notas de frutos rojos', price: '1,20 €' },
+      { name: 'Cortado', desc: 'Espresso con un toque de leche templada', price: '1,40 €' },
+      { name: 'Café con leche', desc: 'El clásico de siempre, bien hecho', price: '1,60 €' },
+      { name: 'Cappuccino', desc: 'Espuma de leche vaporizada artesanal', price: '2,20 €' },
+      { name: 'Café americano', desc: 'Espresso largo con agua caliente', price: '1,60 €' },
+    ],
+    desayunos: [
+      { name: 'Tostada con tomate', desc: 'Pan de masa madre, tomate natural rallado, AOVE', price: '2,50 €' },
+      { name: 'Tostada con mantequilla y mermelada', desc: 'Selección artesanal de temporada', price: '2,20 €' },
+      { name: 'Huevos revueltos', desc: 'Con jamón serrano o champiñones', price: '4,50 €' },
+      { name: 'Porridge de avena', desc: 'Con fruta fresca y miel de flores', price: '3,80 €' },
+      { name: 'Cruasán de mantequilla', desc: 'Recién horneado cada mañana', price: '1,80 €' },
+    ],
+    bocadillos: [
+      { name: 'Jamón ibérico', desc: 'Pan de cristal, tomate, jamón de bellota', price: '5,50 €' },
+      { name: 'Tortilla española', desc: 'Con o sin cebolla, al gusto', price: '3,50 €' },
+      { name: 'Queso y tomate', desc: 'Queso manchego curado, tomate natural', price: '3,80 €' },
+      { name: 'Vegetal', desc: 'Aguacate, tomate, rúcula, huevo duro', price: '4,20 €' },
+    ],
+    zumos: [
+      { name: 'Zumo de naranja natural', desc: 'Exprimido al momento, 4-5 naranjas', price: '2,50 €' },
+      { name: 'Verde energético', desc: 'Manzana, apio, jengibre, limón', price: '3,50 €' },
+      { name: 'Tropical', desc: 'Mango, piña, naranja, cúrcuma', price: '3,50 €' },
+      { name: 'Batido de frutas', desc: 'Leche, plátano, frutos rojos', price: '3,80 €' },
+    ]
+  };
+
+  function showMenu(cat, btn) {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const items = menus[cat];
+    const container = document.getElementById('menu-items');
+    container.style.transition = 'none';
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(10px)';
+    container.innerHTML = items.map(i => `
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">${i.name}</div>
+          <div class="menu-item-desc">${i.desc}</div>
+        </div>
+        <div class="menu-item-price">${i.price}</div>
+      </div>`).join('');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      container.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+      container.style.opacity = '1';
+      container.style.transform = 'translateY(0)';
+    }));
+  }
+
+  showMenu('cafes', document.querySelector('.menu-tab'));
+</script>
+</body>
+</html>
